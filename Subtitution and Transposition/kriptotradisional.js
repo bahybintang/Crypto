@@ -127,9 +127,3 @@ function decrypt() {
     // Show the decrypted value at input box
     input.value = decryptedText
 }
-
-// Function to replace char at specific index
-function setCharAt(str, index, chr) {
-    if (index > str.length - 1) return str;
-    return str.substr(0, index) + chr + str.substr(index + 1);
-}

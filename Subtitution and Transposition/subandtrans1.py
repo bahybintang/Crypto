@@ -14,10 +14,8 @@ def generateKey(key):
     for ch in key:
         transKey = transKey ^ ord(ch) % 7
 
-    # If transKey == 0, assign
-    # transKey to len(key) % 7
-    if transKey == 0:
-        transKey = len(key) % 7
+    # Add 1 so transKey cannot be 0
+    transKey += 1
 
     return subKey, transKey
 

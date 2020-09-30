@@ -12,7 +12,7 @@ def generateKey(key):
 
     # Generate transKey by xor and modulo 7
     for ch in key:
-        transKey = transKey ^ ord(ch) % 7
+        transKey = transKey ^ ord(ch) % max(7, len(key) // 3)
 
     # Add 1 so transKey cannot be 0
     transKey += 1
@@ -35,8 +35,8 @@ def encryptVigenere(plaintext, key):
 def decryptVigenere(plaintext, key):
     d = ""
 
-    # Mi = (Ci - Ki) % 26
-    # Don't need Mi = (Ci - Ki + 26) % 26
+    # Mi = (Ci - Ki) % len(letters)
+    # Don't need Mi = (Ci - Ki + len(letters)) % len(letters)
     # because Python already supported modulus
     # on negative number
     for i in range(len(plaintext)):
@@ -69,21 +69,27 @@ def decryptTranspose(plaintext, key):
     return d
 
 
-def encrypt(plaintext, subKey, transKey):
+def encrypt(plaintext, key):
+    # Getting the key
+    subKey, transKey = generateKey(key)
+
     # Normalize string
     plaintext += "x" * (transKey - (len(plaintext) %
                                     transKey if len(plaintext) % transKey != 0 else transKey))
     return encryptTranspose(encryptVigenere(plaintext, subKey), transKey)
 
 
-def decrypt(plaintext, subKey, transKey):
+def decrypt(plaintext, key):
+    # Getting the key
+    subKey, transKey = generateKey(key)
+
     return decryptVigenere(decryptTranspose(plaintext, transKey), subKey)
 
 
 if __name__ == '__main__':
     plaintext = input("Plaintext: ")
-    subKey, transKey = generateKey(input("Key: "))
-    cipher = encrypt(plaintext, subKey, transKey)
-    decipher = decrypt(cipher, subKey, transKey)
+    key = input("Key: ")
+    cipher = encrypt(plaintext, key)
+    decipher = decrypt(cipher, key)
     print("Encrypted: ", cipher)
     print("Decrypted: ", decipher)
